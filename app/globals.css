@@ -2,23 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* カスタムアニメーション */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
+body {
+  @apply bg-white text-gray-900;
 }
 
+/* shimmer effect */
 .skeleton {
-  animation: shimmer 2s infinite linear;
   background: linear-gradient(
     to right,
-    #f0f0f0 0%,
-    #e0e0e0 50%,
-    #f0f0f0 100%
+    #eeeeee 8%,
+    #dddddd 18%,
+    #eeeeee 33%
   );
-  background-size: 200% 100%;
+  background-size: 1200px 100%;
 }
