@@ -1,31 +1,20 @@
-import { NextRequest } from 'next/server';
-
-export const runtime = 'edge';
+import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q');
-  if (!q) return new Response('Missing query', { status: 400 });
+  const query = searchParams.get("query");
 
-  try {
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
-    const res = await fetch(searchUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 KimutichanBot/1.0',
-      },
-    });
-
-    const html = await res.text();
-    const matches = [...html.matchAll(/<a href="\/url\?q=([^"&]+)[^>]*>(.*?)<\/a>/g)];
-
-    const results = matches.slice(0, 10).map((m) => ({
-      url: decodeURIComponent(m[1]),
-      title: m[2].replace(/<[^>]*>/g, ''),
-    }));
-
-    return Response.json({ results });
-  } catch (e) {
-    console.error(e);
-    return new Response('Error fetching search', { status: 500 });
+  if (!query) {
+    return new Response(JSON.stringify({ results: [] }), { status: 400 });
   }
+
+  const dummyResults = Array.from({ length: 5 }).map((_, idx) => ({
+    title: `${query} - Result ${idx + 1}`,
+    url: "https://example.com",
+    thumbnail: "/logo.png",
+  }));
+
+  return new Response(JSON.stringify({ results: dummyResults }), {
+    headers: { "Content-Type": "application/json" },
+  });
 }
